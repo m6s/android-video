@@ -41,6 +41,6 @@ dependencies {
     compile group: 'com.android.support.constraint', name: 'constraint-layout', version: '1.0.0-alpha3'
     compile group: 'io.reactivex', name: 'rxandroid', version: project.DEPENDENCIES_RX_ANDROID_VERSION
     compile group: 'io.reactivex', name: 'rxjava', version: project.DEPENDENCIES_RX_VERSION
-//    compile 'me.tatarka.retainstate:fragment:0.4'
+    compile 'me.tatarka.retainstate:fragment:0.4'
     provided 'javax.inject:javax.inject:1@jar'
 }
