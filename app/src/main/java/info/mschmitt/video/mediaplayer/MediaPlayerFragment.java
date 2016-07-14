@@ -18,6 +18,7 @@ import javax.inject.Inject;
 
 import info.mschmitt.video.BR;
 import info.mschmitt.video.commons.Factory;
+import info.mschmitt.video.commons.NavigationBarUtils;
 import info.mschmitt.video.databinding.MediaPlayerViewBinding;
 import rx.Completable;
 import rx.Subscription;
@@ -35,6 +36,7 @@ public class MediaPlayerFragment extends Fragment {
     public ObservableBoolean systemUIVisible = new ObservableBoolean(true);
     private UUID id = UUID.randomUUID();
     private MediaPlayerViewModel viewModel;
+    private Subscription showSystemUISubscription;
     private Observable.OnPropertyChangedCallback onPropertyChangedCallback =
             new Observable.OnPropertyChangedCallback() {
                 @Override
@@ -45,7 +47,6 @@ public class MediaPlayerFragment extends Fragment {
                     }
                 }
             };
-    private Subscription showSystemUISubscription;
 
     public static MediaPlayerFragment newInstance() {
         return new MediaPlayerFragment();
@@ -66,9 +67,13 @@ public class MediaPlayerFragment extends Fragment {
         if (showSystemUISubscription != null) {
             showSystemUISubscription.unsubscribe();
         }
-        showSystemUISubscription = Completable.complete()
-                .delay(300, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
-                .subscribe(this::onShowSystemUI);
+        if (NavigationBarUtils.hasNavigationBar(getActivity())) {
+            showSystemUISubscription = Completable.complete()
+                    .delay(200, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+                    .subscribe(this::onShowSystemUIComplete);
+        } else {
+            onShowSystemUIComplete();
+        }
         view.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
     }
@@ -81,12 +86,11 @@ public class MediaPlayerFragment extends Fragment {
         view.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LOW_PROFILE | View.SYSTEM_UI_FLAG_FULLSCREEN |
                         View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
                         View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
                         View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
     }
 
-    private void onShowSystemUI() {
+    private void onShowSystemUIComplete() {
         systemUIVisible.set(true);
     }
 
@@ -106,6 +110,12 @@ public class MediaPlayerFragment extends Fragment {
         binding.setFragment(this);
         viewModel.addOnPropertyChangedCallback(onPropertyChangedCallback);
         updateBoundValues(binding, BR._all);
+
+        View decorView = getActivity().getWindow().getDecorView();
+        decorView.setOnSystemUiVisibilityChangeListener(
+                visibility -> viewModel.onSystemFullscreenChanged(
+                        (visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) != 0));
+
         return binding.getRoot();
     }
 

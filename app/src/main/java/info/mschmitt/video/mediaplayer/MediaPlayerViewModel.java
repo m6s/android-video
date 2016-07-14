@@ -2,10 +2,14 @@ package info.mschmitt.video.mediaplayer;
 
 import android.databinding.Bindable;
 import android.databinding.PropertyChangeRegistry;
-import android.os.Handler;
+
+import java.util.concurrent.TimeUnit;
 
 import info.mschmitt.video.BR;
 import info.mschmitt.video.commons.DataBindingObservable;
+import rx.Completable;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 
 /**
  * @author Matthias Schmitt
@@ -15,12 +19,11 @@ public class MediaPlayerViewModel implements DataBindingObservable {
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
     private static final int INITIAL_DELAY_MILLIS = 1000;
     private final PropertyChangeRegistry propertyChangeRegistry = new PropertyChangeRegistry();
-    private final Handler uiHandler = new Handler();
     private final Router router;
     @Bindable
     public boolean controlsVisible = true;
-    private final Runnable toggleControlsRunnable = this::toggleControls;
     private boolean firstView = true;
+    private Subscription delayedToggleControlsSubscription;
 
     public MediaPlayerViewModel(Router router) {
         this.router = router;
@@ -40,9 +43,23 @@ public class MediaPlayerViewModel implements DataBindingObservable {
         scheduleToggleControls(0);
     }
 
+    public void onSystemFullscreenChanged(boolean fullscreen) {
+        if (fullscreen) {
+            return;
+        }
+        scheduleToggleControls(0);
+    }
+
+    public void onPlayPauseClick() {
+    }
+
     private void scheduleToggleControls(int delayMillis) {
-        uiHandler.removeCallbacks(toggleControlsRunnable);
-        uiHandler.postDelayed(toggleControlsRunnable, delayMillis);
+        if (delayedToggleControlsSubscription != null) {
+            delayedToggleControlsSubscription.unsubscribe();
+        }
+        delayedToggleControlsSubscription = Completable.complete()
+                .delay(delayMillis, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
+                .subscribe(this::toggleControls);
     }
 
     private void setControlsVisible(boolean controlsVisible) {

@@ -1,6 +1,7 @@
 package info.mschmitt.video;
 
 import android.app.Application;
+import android.support.v7.app.AppCompatDelegate;
 
 import info.mschmitt.video.mediaplayer.MediaPlayerViewModel;
 
@@ -13,6 +14,12 @@ public class VideoApplication extends Application {
 
     public VideoApplication() {
         instance = this;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
     public void inject(MainActivity mainActivity) {

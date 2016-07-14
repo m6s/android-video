@@ -1,5 +1,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:ignore="RtlHardcoded,ContentDescription">
 
     <data>
 
@@ -39,23 +41,31 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            android:visibility="@{viewModel.controlsVisible &amp;&amp; fragment.systemUIVisible ? View.VISIBLE : View.GONE}">
+            android:visibility="@{fragment.systemUIVisible ? View.VISIBLE : View.GONE}">
 
             <LinearLayout
                 style="?metaButtonBarStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center_horizontal"
+                android:layout_gravity="bottom"
                 android:background="@color/black_overlay"
                 android:orientation="horizontal">
 
-                <Button
+                <View
+                    android:layout_width="0px"
+                    android:layout_height="0px"
+                    android:layout_weight="1"/>
+
+                <ImageButton
                     style="?metaButtonBarButtonStyle"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/dummy_button"
-                    app:onTouch="@{() -> viewModel.onControlTouch()}"/>
+                    android:layout_gravity="right"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:onClick="@{() -> viewModel.onPlayPauseClick()}"
+                    android:tint="@android:color/white"
+                    app:onTouch="@{() -> viewModel.onControlTouch()}"
+                    app:srcCompat="@drawable/ic_pause_black_24dp"/>
 
             </LinearLayout>
         </FrameLayout>
