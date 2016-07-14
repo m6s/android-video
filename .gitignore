@@ -27,6 +27,7 @@ proguard/
 # IntelliJ
 /.idea/workspace.xml
 /.idea/libraries
+/.idea/vcs.xml
 /captures
 
 # Proguard
