@@ -41,14 +41,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            android:visibility="@{fragment.systemUIVisible ? View.VISIBLE : View.GONE}">
+            android:visibility="@{fragment.systemUiVisible ? View.VISIBLE : View.GONE}">
 
             <LinearLayout
                 style="?metaButtonBarStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:background="@color/black_overlay"
+                android:background="@color/overlay"
                 android:orientation="horizontal">
 
                 <View

@@ -2,6 +2,8 @@ package info.mschmitt.video.commons;
 
 import android.app.Activity;
 import android.graphics.Point;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 
 /**
  * @author Matthias Schmitt
@@ -28,6 +30,7 @@ public class NavigationBarUtils {
     /**
      * http://stackoverflow.com/a/30367339/2317680
      */
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public static boolean hasNavigationBar(Activity activity) {
         Point realSize = new Point();
         Point size = new Point();

@@ -1,6 +1,5 @@
 package info.mschmitt.video.mediaplayer;
 
-import android.databinding.DataBindingUtil;
 import android.databinding.Observable;
 import android.databinding.ObservableBoolean;
 import android.os.Bundle;
@@ -15,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import info.mschmitt.video.BR;
+import info.mschmitt.video.R;
 import info.mschmitt.video.commons.DataBindingUtil2;
 import info.mschmitt.video.commons.Factory;
 import info.mschmitt.video.commons.NavigationBarUtils;
@@ -32,23 +32,19 @@ import rx.android.schedulers.AndroidSchedulers;
 public class MediaPlayerFragment extends Fragment implements RetainState.Provider {
     @Inject
     public Factory<MediaPlayerViewModel> viewModelFactory;
-    public ObservableBoolean systemUIVisible = new ObservableBoolean(true);
+    public ObservableBoolean systemUiVisible = new ObservableBoolean(true);
     private MediaPlayerViewModel viewModel;
-    private Subscription showSystemUISubscription;
+    private Subscription showSystemUiSubscription;
     private Observable.OnPropertyChangedCallback onPropertyChangedCallback =
-            new Observable.OnPropertyChangedCallback() {
-                @Override
-                public void onPropertyChanged(Observable observable, int i) {
-                    MediaPlayerViewBinding binding = DataBindingUtil.getBinding(getView());
-                    if (binding != null) {
-                        updateBoundValues(binding, i);
-                    }
-                }
-            };
+            DataBindingUtil2.newCallback(this::updateBoundValues);
     private RetainState retainState;
 
     public static MediaPlayerFragment newInstance() {
         return new MediaPlayerFragment();
+    }
+
+    private void updateBoundValues(int i) {
+        updateBoundValues(DataBindingUtil2.getBindingOrThrow(getView()), i);
     }
 
     private void updateBoundValues(MediaPlayerViewBinding binding, int i) {
@@ -57,31 +53,31 @@ public class MediaPlayerFragment extends Fragment implements RetainState.Provide
             if (controlsVisible) {
                 showSystemUI(binding.getRoot());
             } else {
-                hideSystemUI(binding.getRoot());
+                hideSystemUi(binding.getRoot());
             }
         }
     }
 
     private void showSystemUI(View view) {
-        if (showSystemUISubscription != null) {
-            showSystemUISubscription.unsubscribe();
+        if (showSystemUiSubscription != null) {
+            showSystemUiSubscription.unsubscribe();
         }
         if (NavigationBarUtils.hasNavigationBar(getActivity())) {
-            showSystemUISubscription = Completable.complete()
+            showSystemUiSubscription = Completable.complete()
                     .delay(200, TimeUnit.MILLISECONDS, AndroidSchedulers.mainThread())
-                    .subscribe(this::onShowSystemUIComplete);
+                    .subscribe(this::onShowSystemUiComplete);
         } else {
-            onShowSystemUIComplete();
+            onShowSystemUiComplete();
         }
         view.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
     }
 
-    private void hideSystemUI(View view) {
-        if (showSystemUISubscription != null) {
-            showSystemUISubscription.unsubscribe();
+    private void hideSystemUi(View view) {
+        if (showSystemUiSubscription != null) {
+            showSystemUiSubscription.unsubscribe();
         }
-        systemUIVisible.set(false);
+        systemUiVisible.set(false);
         view.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LOW_PROFILE | View.SYSTEM_UI_FLAG_FULLSCREEN |
                         View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
@@ -89,8 +85,8 @@ public class MediaPlayerFragment extends Fragment implements RetainState.Provide
                         View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
     }
 
-    private void onShowSystemUIComplete() {
-        systemUIVisible.set(true);
+    private void onShowSystemUiComplete() {
+        systemUiVisible.set(true);
     }
 
     @Nullable
@@ -117,10 +113,11 @@ public class MediaPlayerFragment extends Fragment implements RetainState.Provide
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         retainState = RetainStateFragment.from(this);
-        viewModel = retainState.retain(0, () -> viewModelFactory.create());
-        viewModel.addOnPropertyChangedCallback(onPropertyChangedCallback);
-        MediaPlayerViewBinding binding = DataBindingUtil2.getBinding(getView());
+        viewModel =
+                retainState.retain(R.id.retainStateMediaPlayer, () -> viewModelFactory.create());
+        MediaPlayerViewBinding binding = DataBindingUtil2.getBindingOrThrow(getView());
         binding.setViewModel(viewModel);
+        viewModel.addOnPropertyChangedCallback(onPropertyChangedCallback);
         updateBoundValues(binding, BR._all);
         View decorView = getActivity().getWindow().getDecorView();
         decorView.setOnSystemUiVisibilityChangeListener(
@@ -131,6 +128,7 @@ public class MediaPlayerFragment extends Fragment implements RetainState.Provide
 
     @Override
     public void onDestroyView() {
+        // Safe because onActivityCreated() always called after onCreateView()
         viewModel.removeOnPropertyChangedCallback(onPropertyChangedCallback);
         super.onDestroyView();
     }

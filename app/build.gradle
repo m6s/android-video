@@ -4,10 +4,10 @@ apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.0"
+    buildToolsVersion "24.0.2"
     defaultConfig {
         applicationId "info.mschmitt.video"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
@@ -30,15 +30,15 @@ android {
 }
 
 dependencies {
-    compile group: 'com.android.support', name: 'appcompat-v7', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
-    compile group: 'com.android.support', name: 'support-v4', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
+//    compile group: 'com.android.support', name: 'appcompat-v7', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
+//    compile group: 'com.android.support', name: 'support-v4', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
     compile group: 'com.android.support', name: 'design', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
-    compile group: 'com.android.support', name: 'support-annotations', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
-    compile group: 'com.android.support', name: 'gridlayout-v7', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
-    compile group: 'com.android.support', name: 'recyclerview-v7', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
-    compile group: 'com.android.support', name: 'cardview-v7', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
-    compile group: 'com.android.support', name: 'percent', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
-    compile group: 'com.android.support.constraint', name: 'constraint-layout', version: '1.0.0-alpha3'
+//    compile group: 'com.android.support', name: 'support-annotations', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
+//    compile group: 'com.android.support', name: 'gridlayout-v7', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
+//    compile group: 'com.android.support', name: 'recyclerview-v7', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
+//    compile group: 'com.android.support', name: 'cardview-v7', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
+//    compile group: 'com.android.support', name: 'percent', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
+//    compile group: 'com.android.support.constraint', name: 'constraint-layout', version: '1.0.0-alpha7'
     compile group: 'io.reactivex', name: 'rxandroid', version: project.DEPENDENCIES_RX_ANDROID_VERSION
     compile group: 'io.reactivex', name: 'rxjava', version: project.DEPENDENCIES_RX_VERSION
     compile 'me.tatarka.retainstate:fragment:0.4'
