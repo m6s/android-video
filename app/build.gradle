@@ -1,14 +1,11 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'com.neenbedankt.android-apt'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    compileSdkVersion 31
     defaultConfig {
         applicationId "info.mschmitt.video"
-        minSdkVersion 17
-        targetSdkVersion 24
+        minSdkVersion 23
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -30,17 +27,16 @@ android {
 }
 
 dependencies {
-//    compile group: 'com.android.support', name: 'appcompat-v7', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
-//    compile group: 'com.android.support', name: 'support-v4', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
-    compile group: 'com.android.support', name: 'design', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
+    implementation group: 'com.android.support', name: 'support-v4', version: '28.0.0'
+    implementation group: 'com.android.support', name: 'design', version: '28.0.0'
 //    compile group: 'com.android.support', name: 'support-annotations', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
 //    compile group: 'com.android.support', name: 'gridlayout-v7', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
 //    compile group: 'com.android.support', name: 'recyclerview-v7', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
 //    compile group: 'com.android.support', name: 'cardview-v7', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
 //    compile group: 'com.android.support', name: 'percent', version: project.DEPENDENCIES_ANDROID_SUPPORT_VERSION
 //    compile group: 'com.android.support.constraint', name: 'constraint-layout', version: '1.0.0-alpha7'
-    compile group: 'io.reactivex', name: 'rxandroid', version: project.DEPENDENCIES_RX_ANDROID_VERSION
-    compile group: 'io.reactivex', name: 'rxjava', version: project.DEPENDENCIES_RX_VERSION
-    compile 'me.tatarka.retainstate:fragment:0.4'
-    provided 'javax.inject:javax.inject:1@jar'
+    implementation group: 'io.reactivex', name: 'rxandroid', version: '1.2.0'
+    implementation group: 'io.reactivex', name: 'rxjava', version: '1.1.5'
+    implementation 'me.tatarka.retainstate:fragment:0.4'
+    compileOnly 'javax.inject:javax.inject:1@jar'
 }
